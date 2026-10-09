@@ -1,6 +1,6 @@
 import { supabase } from '../../../lib/supabase';
 
-// Inserts a new record into `job_broadcasts`
+// Creates a new job broadcast and deducts credits via RPC
 export const createJobBroadcast = async (jobData: {
   branch_id: string;
   service_type: string;
@@ -8,13 +8,19 @@ export const createJobBroadcast = async (jobData: {
   duration_minutes: number;
   offered_price: number;
 }) => {
-  const { data, error } = await supabase
-    .from('job_broadcasts')
-    .insert([jobData])
-    .select()
-    .single();
+  const { data, error } = await supabase.rpc('broadcast_job_with_credits', {
+    p_branch_id: jobData.branch_id,
+    p_service_type: jobData.service_type,
+    p_start_time: jobData.start_time,
+    p_duration_minutes: jobData.duration_minutes,
+    p_offered_price: jobData.offered_price,
+    p_credit_cost: 10
+  });
 
-  if (error) throw error;
+  if (error) {
+    throw new Error(error.message);
+  }
+
   return data;
 };
 

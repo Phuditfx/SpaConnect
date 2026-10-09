@@ -1,14 +1,54 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { ShopLayout } from '../layouts/ShopLayout';
 import { TherapistLayout } from '../layouts/TherapistLayout';
+import { SuperAdminLayout } from '../layouts/SuperAdminLayout';
 import { ProtectedRoute } from './ProtectedRoute';
 import { ShopBroadcastPage } from '../features/freelance-shop/pages/ShopBroadcastPage';
 import { TherapistRadarPage } from '../features/freelance-therapist/pages/TherapistRadarPage';
+import { TherapistRegisterPage } from '../features/auth/pages/TherapistRegisterPage';
+import { ShopRegisterPage } from '../features/auth/pages/ShopRegisterPage';
+import { VerificationDashboard } from '../features/super-admin/pages/VerificationDashboard';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <Navigate to="/shop/freelance-request" replace />,
+  },
+  {
+    path: '/register/therapist',
+    element: <TherapistRegisterPage />,
+  },
+  {
+    path: '/register/shop',
+    element: <ShopRegisterPage />,
+  },
+  {
+    path: '/admin',
+    element: <ProtectedRoute allowedRoles={['admin']} />,
+    children: [
+      {
+        path: '',
+        element: <SuperAdminLayout />,
+        children: [
+          {
+            path: '',
+            element: <Navigate to="verification" replace />,
+          },
+          {
+            path: 'verification',
+            element: <VerificationDashboard />,
+          },
+          {
+            path: 'users',
+            element: <div className="p-8">Users Management Placeholder</div>,
+          },
+          {
+            path: 'activity',
+            element: <div className="p-8">Activity Log Placeholder</div>,
+          }
+        ],
+      },
+    ],
   },
   {
     path: '/shop',
