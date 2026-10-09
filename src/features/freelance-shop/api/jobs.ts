@@ -40,16 +40,14 @@ export const getJobApplicants = async (jobId: string) => {
   return data;
 };
 
-// Updates the application status to 'accepted_by_shop'
+// Updates the application status, job broadcast status, and creates a POS session via Edge Function
 export const acceptApplicant = async (applicationId: string) => {
-  // We only update job_applications. The DB Trigger handles job_broadcasts status and rejecting others.
-  const { data, error } = await supabase
-    .from('job_applications')
-    .update({ status: 'accepted_by_shop' })
-    .eq('id', applicationId)
-    .select()
-    .single();
+  const { data, error } = await supabase.functions.invoke('accept-applicant', {
+    body: { applicationId }
+  });
 
   if (error) throw error;
+  if (data?.error) throw new Error(data.error);
+  
   return data;
 };
