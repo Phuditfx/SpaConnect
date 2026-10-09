@@ -27,7 +27,7 @@ export const ShopBroadcastPage: React.FC = () => {
           
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex-1">
             <h2 className="text-xl font-bold text-gray-800 mb-6 border-b pb-4">Create Request</h2>
-            <JobBroadcastForm />
+            <JobBroadcastForm branchId={branchId} />
           </div>
         </div>
 

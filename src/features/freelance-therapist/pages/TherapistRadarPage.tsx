@@ -9,7 +9,7 @@ export const TherapistRadarPage: React.FC = () => {
         <p className="text-gray-500 text-sm">Find and apply to freelance requests from spa shops in real-time.</p>
       </div>
       <div className="flex-1 bg-gray-50 overflow-hidden">
-        <JobRadar />
+        <JobRadar freelanceId="mock-therapist-id" lat={13.7563} lng={100.5018} />
       </div>
     </div>
   );

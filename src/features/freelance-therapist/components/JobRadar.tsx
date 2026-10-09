@@ -1,14 +1,11 @@
-import React from 'react';
+
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Loader2, MapPin, Clock, Banknote } from 'lucide-react';
 import { useJobRadarSubscription } from '../hooks/useJobRadar';
 import { applyForJob } from '../api/radar';
 
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-
-interface JobRadarProps {
+export interface JobRadarProps {
   freelanceId: string;
   lat: number;
   lng: number;
@@ -73,63 +70,60 @@ export function JobRadar({ freelanceId, lat, lng }: JobRadarProps) {
             transition={{ duration: 0.3 }}
             layout
           >
-            <Card className="shadow-sm hover:shadow-md transition-shadow border-slate-200 overflow-hidden">
-              <CardContent className="p-0">
-                <div className="flex flex-col md:flex-row">
-                  
-                  {/* Job Info Section */}
-                  <div className="flex-1 p-5 md:p-6 space-y-3">
-                    <div>
-                      <h3 className="text-lg font-bold text-slate-900">{job.service_type}</h3>
-                      <div className="flex items-center text-slate-500 mt-1 text-sm">
-                        <MapPin className="w-4 h-4 mr-1 text-slate-400" />
-                        <span className="font-semibold text-slate-700">{job.branch_name}</span>
-                        <span className="mx-2">•</span>
-                        <span>ห่างออกไป {Number(job.distance_km).toFixed(1)} กม.</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-wrap items-center gap-3 text-sm">
-                      <div className="flex items-center text-slate-700 bg-slate-100 px-3 py-1.5 rounded-md">
-                        <Clock className="w-4 h-4 mr-2 text-slate-500" />
-                        <span>เริ่มงาน <span className="font-bold">{new Date(job.start_time).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</span></span>
-                      </div>
-                      <div className="flex items-center text-slate-700 bg-slate-100 px-3 py-1.5 rounded-md">
-                        ระยะเวลา <span className="font-bold ml-1">{job.duration_minutes} นาที</span>
-                      </div>
+            <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-slate-200 overflow-hidden">
+              <div className="flex flex-col md:flex-row">
+                
+                {/* Job Info Section */}
+                <div className="flex-1 p-5 md:p-6 space-y-3">
+                  <div>
+                    <h3 className="text-lg font-bold text-slate-900">{job.service_type}</h3>
+                    <div className="flex items-center text-slate-500 mt-1 text-sm">
+                      <MapPin className="w-4 h-4 mr-1 text-slate-400" />
+                      <span className="font-semibold text-slate-700">{job.branch_name}</span>
+                      <span className="mx-2">•</span>
+                      <span>ห่างออกไป {Number(job.distance_km).toFixed(1)} กม.</span>
                     </div>
                   </div>
-
-                  {/* Price & Action Section */}
-                  <div className="flex flex-col justify-center bg-slate-50 p-5 md:p-6 md:min-w-[180px] border-t md:border-t-0 md:border-l border-slate-100">
-                    <div className="text-right w-full mb-4">
-                      <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">ค่าจ้าง (THB)</p>
-                      <div className="flex items-center justify-end text-emerald-600">
-                        <Banknote className="w-5 h-5 mr-1" />
-                        <span className="text-3xl font-extrabold tracking-tight">{job.offered_price}</span>
-                      </div>
-                    </div>
-
-                    <Button 
-                      className={`w-full font-medium shadow-sm ${
-                        job.has_applied 
-                          ? 'bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-200' 
-                          : 'bg-blue-600 hover:bg-blue-700 text-white'
-                      }`}
-                      disabled={job.has_applied || applyMutation.isPending}
-                      onClick={() => applyMutation.mutate(job.job_id)}
-                      variant={job.has_applied ? 'secondary' : 'default'}
-                    >
-                      {applyMutation.isPending && applyMutation.variables === job.job_id ? (
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      ) : null}
-                      {job.has_applied ? 'รอดำเนินการ...' : 'กดรับงานนี้'}
-                    </Button>
-                  </div>
                   
+                  <div className="flex flex-wrap items-center gap-3 text-sm">
+                    <div className="flex items-center text-slate-700 bg-slate-100 px-3 py-1.5 rounded-md">
+                      <Clock className="w-4 h-4 mr-2 text-slate-500" />
+                      <span>เริ่มงาน <span className="font-bold">{new Date(job.start_time).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })}</span></span>
+                    </div>
+                    <div className="flex items-center text-slate-700 bg-slate-100 px-3 py-1.5 rounded-md">
+                      ระยะเวลา <span className="font-bold ml-1">{job.duration_minutes} นาที</span>
+                    </div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+
+                {/* Price & Action Section */}
+                <div className="flex flex-col justify-center bg-slate-50 p-5 md:p-6 md:min-w-[180px] border-t md:border-t-0 md:border-l border-slate-100">
+                  <div className="text-right w-full mb-4">
+                    <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">ค่าจ้าง (THB)</p>
+                    <div className="flex items-center justify-end text-emerald-600">
+                      <Banknote className="w-5 h-5 mr-1" />
+                      <span className="text-3xl font-extrabold tracking-tight">{job.offered_price}</span>
+                    </div>
+                  </div>
+
+                  <button 
+                    className={`w-full font-medium py-2 px-4 rounded-xl shadow-sm transition-colors flex items-center justify-center disabled:opacity-70 ${
+                      job.has_applied 
+                        ? 'bg-amber-100 text-amber-800 hover:bg-amber-200 border border-amber-200' 
+                        : 'bg-blue-600 hover:bg-blue-700 text-white'
+                    }`}
+                    disabled={job.has_applied || applyMutation.isPending}
+                    onClick={() => applyMutation.mutate(job.job_id)}
+                  >
+                    {applyMutation.isPending && applyMutation.variables === job.job_id ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    ) : null}
+                    {job.has_applied ? 'รอดำเนินการ...' : 'กดรับงานนี้'}
+                  </button>
+                </div>
+                
+              </div>
+            </div>
           </motion.div>
         ))}
       </AnimatePresence>

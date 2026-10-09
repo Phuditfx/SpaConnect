@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 // This is a mock ProtectedRoute. In a real app, you would check Auth state from Context or Supabase here.
 interface ProtectedRouteProps {
-  allowedRoles?: ('shop' | 'therapist')[];
+  allowedRoles?: ('shop' | 'therapist' | 'admin')[];
   redirectPath?: string;
 }
 

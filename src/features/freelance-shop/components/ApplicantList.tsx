@@ -16,7 +16,7 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({ jobId }) => {
 
   const mutation = useMutation({
     mutationFn: (applicationId: string) => acceptApplicant(applicationId),
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
       setAcceptedApplicantId(variables);
       // Re-fetch to ensure sync with DB
       queryClient.invalidateQueries({ queryKey: ['jobApplicants', jobId] });
@@ -56,10 +56,13 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({ jobId }) => {
   // Check if any applicant is accepted (either locally right now, or previously in DB)
   const matchedApplicant = activeApplicants.find((app: any) => app.status === 'matched' || app.id === acceptedApplicantId);
 
+  // Helper to extract profile safely
+  const getProfile = (appData: any) => Array.isArray(appData.freelance_profiles) ? appData.freelance_profiles[0] : appData.freelance_profiles;
+
   // --- Success State ---
   if (matchedApplicant) {
-    const profile = matchedApplicant.freelance_profiles;
-    const mockRating = (4.5 + (profile.id.charCodeAt(0) % 5) / 10).toFixed(1);
+    const profile = getProfile(matchedApplicant);
+    const mockRating = (4.5 + (profile?.id?.charCodeAt(0) % 5) / 10).toFixed(1);
 
     return (
       <div className="p-4 md:p-8 flex justify-center">
@@ -131,9 +134,9 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({ jobId }) => {
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
       <AnimatePresence>
         {activeApplicants.map((applicant: any) => {
-          const profile = applicant.freelance_profiles;
+          const profile = getProfile(applicant);
           // Generate a consistent mock rating based on ID
-          const mockRating = (4.5 + (profile.id.charCodeAt(0) % 5) / 10).toFixed(1);
+          const mockRating = (4.5 + (profile?.id?.charCodeAt(0) % 5) / 10).toFixed(1);
 
           return (
             <motion.div
@@ -150,8 +153,8 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({ jobId }) => {
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2 truncate">
-                    <span className="truncate">{profile.full_name}</span>
-                    {profile.is_verified && (
+                    <span className="truncate">{profile?.full_name}</span>
+                    {profile?.is_verified && (
                       <ShieldCheck className="text-blue-500 w-5 h-5 shrink-0" />
                     )}
                   </h3>
@@ -163,7 +166,7 @@ export const ApplicantList: React.FC<ApplicantListProps> = ({ jobId }) => {
                   </div>
                   <div className="flex items-center gap-1 mt-2 text-sm text-gray-500">
                     <Phone className="w-4 h-4" />
-                    <span>{profile.phone_number}</span>
+                    <span>{profile?.phone_number}</span>
                   </div>
                 </div>
               </div>
