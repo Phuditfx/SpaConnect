@@ -8,11 +8,12 @@ import { TherapistRadarPage } from '../features/freelance-therapist/pages/Therap
 import { TherapistRegisterPage } from '../features/auth/pages/TherapistRegisterPage';
 import { ShopRegisterPage } from '../features/auth/pages/ShopRegisterPage';
 import { VerificationDashboard } from '../features/super-admin/pages/VerificationDashboard';
+import { LandingPage } from '../pages/LandingPage';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/shop/freelance-request" replace />,
+    element: <LandingPage />,
   },
   {
     path: '/register/therapist',
